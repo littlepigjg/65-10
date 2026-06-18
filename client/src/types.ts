@@ -36,8 +36,10 @@ export interface ConflictFile {
   resolvedAt?: number;
 }
 
+export type DiffLineType = 'added' | 'removed' | 'unchanged' | 'modified' | 'empty';
+
 export interface DiffLine {
-  type: 'added' | 'removed' | 'unchanged';
+  type: DiffLineType;
   content: string;
   lineNumber: number;
 }
@@ -45,13 +47,37 @@ export interface DiffLine {
 export interface DiffResult {
   additions: number;
   removals: number;
+  modifications: number;
   lines: DiffLine[];
 }
 
 export interface SideBySideLine {
   content: string;
-  type: string;
+  type: DiffLineType;
   lineNumber: number;
+  pairIndex?: number;
+}
+
+export interface SideBySideDiff {
+  left: SideBySideLine[];
+  right: SideBySideLine[];
+  totalLines: number;
+  additions: number;
+  removals: number;
+  modifications: number;
+}
+
+export interface LineSelection {
+  [pairIndex: number]: 'left' | 'right' | 'both';
+}
+
+export interface DiffViewerProps {
+  sourceContent: string;
+  targetContent: string;
+  onSelectionChange?: (selection: LineSelection) => void;
+  onMergedContentChange?: (content: string) => void;
+  editable?: boolean;
+  className?: string;
 }
 
 export interface ConflictDiff {
